@@ -6,7 +6,17 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git"
+  },
   "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "author": "Bruno Moraes",
+  "bugs": {
+    "url": "https://github.com/brunosm16/task-manager-api/issues"
+  },
+  "homepage": "https://github.com/brunosm16/task-manager-api/#readme",
+  "license": "ISC",
+  "devDependencies": {
+    "git-commit-msg-linter": "^3.2.8"
+  }
 }
