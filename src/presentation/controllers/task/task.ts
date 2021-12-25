@@ -4,12 +4,12 @@ import { HttpRequest, HttpResponse } from '../../protocols/http'
 
 export class TaskController {
   handle (httpRequest: HttpRequest): HttpResponse {
-    if (!httpRequest.body.name) {
-      return badRequest(new MissingParamError('name'))
-    }
+    const requiredFields = ['name', 'completed']
 
-    if (!httpRequest.body.completed) {
-      return badRequest(new MissingParamError('completed'))
+    for (const field of requiredFields) {
+      if (!httpRequest.body[field]) {
+        return badRequest(new MissingParamError(field))
+      }
     }
 
     return badRequest(new Error('Request Not Found'))
