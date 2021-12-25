@@ -4,8 +4,8 @@
   "description": "➡️ Gerenciador de Tarefas que segue os príncipios de TDD e Clean Architecture.",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "test:staged": "jest"
+    "test": "jest --passWithNoTests",
+    "test:staged": "jest --passWithNoTests"
   },
   "repository": {
     "type": "git"
