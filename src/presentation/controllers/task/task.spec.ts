@@ -1,3 +1,4 @@
+import { MissingParamError } from '../../errors/missing-param-error'
 import { TaskController } from './task'
 
 describe('Task Controller', () => {
@@ -13,7 +14,7 @@ describe('Task Controller', () => {
     const httpResponse = sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new Error('Missing Param: name'))
+    expect(httpResponse.body).toEqual(new MissingParamError('name'))
   })
 
   test('Should return 400 if no completed is provided', () => {
@@ -28,6 +29,6 @@ describe('Task Controller', () => {
     const httpResponse = sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
-    expect(httpResponse.body).toEqual(new Error('Missing Param: completed'))
+    expect(httpResponse.body).toEqual(new MissingParamError('completed'))
   })
 })
