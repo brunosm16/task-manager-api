@@ -1,9 +1,14 @@
 import { MissingParamError } from '../../errors/missing-param-error'
+import { Controller } from '../../protocols/controller'
 import { TaskController } from './task'
+
+const makeSut = (): Controller => {
+  return new TaskController()
+}
 
 describe('Task Controller', () => {
   test('Should return 400 if no name is provided', () => {
-    const sut = new TaskController()
+    const sut = makeSut()
 
     const httpRequest = {
       body: {
@@ -18,7 +23,7 @@ describe('Task Controller', () => {
   })
 
   test('Should return 400 if no completed is provided', () => {
-    const sut = new TaskController()
+    const sut = makeSut()
 
     const httpRequest = {
       body: {
