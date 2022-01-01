@@ -1,8 +1,6 @@
-import { MissingParamError } from '../../errors/missing-param-error'
-import { InvalidParamError } from '../../errors/invalid-param-error'
-import { BooleanValidator } from '../../protocols/boolean-validator'
+import { BooleanValidator } from '../../protocols'
+import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 import { TaskController } from './task'
-import { ServerError } from '../../errors/server-error'
 
 interface SutTypes {
   sut: TaskController

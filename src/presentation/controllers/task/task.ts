@@ -1,10 +1,11 @@
-import { InvalidParamError } from '../../errors/invalid-param-error'
-import { MissingParamError } from '../../errors/missing-param-error'
-import { ServerError } from '../../errors/server-error'
+import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
+import {
+  Controller,
+  HttpRequest,
+  HttpResponse,
+  BooleanValidator
+} from '../../protocols'
 import { badRequest, serverError } from '../../helpers/http-helper'
-import { BooleanValidator } from '../../protocols/boolean-validator'
-import { Controller } from '../../protocols/controller'
-import { HttpRequest, HttpResponse } from '../../protocols/http'
 
 export class TaskController implements Controller {
   private readonly booleanValidator: BooleanValidator
