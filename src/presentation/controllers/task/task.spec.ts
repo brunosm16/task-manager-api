@@ -1,10 +1,12 @@
 import { BooleanValidator } from '../../protocols'
 import { InvalidParamError, MissingParamError, ServerError } from '../../errors'
 import { TaskController } from './task'
+import { NameValidator } from '../../protocols/name-validator'
 
 interface SutTypes {
   sut: TaskController
   booleanValidatorStub: BooleanValidator
+  nameValidatorStub: NameValidator
 }
 
 const makeBooleanValidatorStub = (): BooleanValidator => {
@@ -17,12 +19,23 @@ const makeBooleanValidatorStub = (): BooleanValidator => {
   return new BooleanValidatorStub()
 }
 
+const makeNameValidatorStub = (): NameValidator => {
+  class NameValidatorStub implements NameValidator {
+    isValid (name: string): boolean {
+      return true
+    }
+  }
+  return new NameValidatorStub()
+}
+
 const makeSut = (): SutTypes => {
   const booleanValidator = makeBooleanValidatorStub()
-  const taskController = new TaskController(booleanValidator)
+  const nameValidator = makeNameValidatorStub()
+  const taskController = new TaskController(booleanValidator, nameValidator)
   return {
     sut: taskController,
-    booleanValidatorStub: booleanValidator
+    booleanValidatorStub: booleanValidator,
+    nameValidatorStub: nameValidator
   }
 }
 
@@ -112,5 +125,23 @@ describe('Task Controller', () => {
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
+  })
+
+  test('Should return 400 if name is not valid', async () => {
+    const { sut, nameValidatorStub } = makeSut()
+
+    const httpRequest = {
+      body: {
+        name: 'invalid_name',
+        completed: true
+      }
+    }
+
+    jest.spyOn(nameValidatorStub, 'isValid').mockReturnValueOnce(false)
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('name'))
   })
 })
