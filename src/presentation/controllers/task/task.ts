@@ -14,7 +14,7 @@ export class TaskController implements Controller {
     this.booleanValidator = booleanValidator
   }
 
-  handle (httpRequest: HttpRequest): HttpResponse {
+  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const requiredFields = ['name', 'completed']
 

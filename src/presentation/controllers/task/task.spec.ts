@@ -27,7 +27,7 @@ const makeSut = (): SutTypes => {
 }
 
 describe('Task Controller', () => {
-  test('Should return 400 if no name is provided', () => {
+  test('Should return 400 if no name is provided', async () => {
     const { sut } = makeSut()
 
     const httpRequest = {
@@ -36,13 +36,13 @@ describe('Task Controller', () => {
       }
     }
 
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('name'))
   })
 
-  test('Should return 400 if no completed is provided', () => {
+  test('Should return 400 if no completed is provided', async () => {
     const { sut } = makeSut()
 
     const httpRequest = {
@@ -51,13 +51,13 @@ describe('Task Controller', () => {
       }
     }
 
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('completed'))
   })
 
-  test('Should return 400 if completed is not boolean', () => {
+  test('Should return 400 if completed is not boolean', async () => {
     const { sut, booleanValidatorStub } = makeSut()
 
     const httpRequest = {
@@ -69,13 +69,13 @@ describe('Task Controller', () => {
 
     jest.spyOn(booleanValidatorStub, 'isValid').mockReturnValueOnce(false)
 
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('completed'))
   })
 
-  test('Should call BooleanValidator with correct value', () => {
+  test('Should call BooleanValidator with correct value', async () => {
     const { sut, booleanValidatorStub } = makeSut()
 
     const httpRequest = {
@@ -87,14 +87,14 @@ describe('Task Controller', () => {
 
     const isValidSpy = jest.spyOn(booleanValidatorStub, 'isValid')
 
-    sut.handle(httpRequest)
+    await sut.handle(httpRequest)
 
     const { completed: requestParamCompleted } = httpRequest.body
 
     expect(isValidSpy).toHaveBeenCalledWith(requestParamCompleted)
   })
 
-  test('Should return 500 if BooleanValidator throws', () => {
+  test('Should return 500 if BooleanValidator throws', async () => {
     const { sut, booleanValidatorStub } = makeSut()
 
     jest.spyOn(booleanValidatorStub, 'isValid').mockImplementationOnce(() => {
@@ -108,7 +108,7 @@ describe('Task Controller', () => {
       }
     }
 
-    const httpResponse = sut.handle(httpRequest)
+    const httpResponse = await sut.handle(httpRequest)
 
     expect(httpResponse.statusCode).toBe(500)
     expect(httpResponse.body).toEqual(new ServerError())
