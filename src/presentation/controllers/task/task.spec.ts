@@ -1,14 +1,35 @@
 import { MissingParamError } from '../../errors/missing-param-error'
-import { Controller } from '../../protocols/controller'
+import { InvalidParamError } from '../../errors/invalid-param-error'
+import { BooleanValidator } from '../../protocols/boolean-validator'
 import { TaskController } from './task'
 
-const makeSut = (): Controller => {
-  return new TaskController()
+interface SutTypes {
+  sut: TaskController
+  booleanValidatorStub: BooleanValidator
+}
+
+const makeBooleanValidatorStub = (): BooleanValidator => {
+  class BooleanValidatorStub implements BooleanValidator {
+    isValid (completed: boolean): boolean {
+      return true
+    }
+  }
+
+  return new BooleanValidatorStub()
+}
+
+const makeSut = (): SutTypes => {
+  const booleanValidator = makeBooleanValidatorStub()
+  const taskController = new TaskController(booleanValidator)
+  return {
+    sut: taskController,
+    booleanValidatorStub: booleanValidator
+  }
 }
 
 describe('Task Controller', () => {
   test('Should return 400 if no name is provided', () => {
-    const sut = makeSut()
+    const { sut } = makeSut()
 
     const httpRequest = {
       body: {
@@ -23,7 +44,7 @@ describe('Task Controller', () => {
   })
 
   test('Should return 400 if no completed is provided', () => {
-    const sut = makeSut()
+    const { sut } = makeSut()
 
     const httpRequest = {
       body: {
@@ -35,5 +56,23 @@ describe('Task Controller', () => {
 
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new MissingParamError('completed'))
+  })
+
+  test('Should return 400 if completed is not boolean', () => {
+    const { sut, booleanValidatorStub } = makeSut()
+
+    const httpRequest = {
+      body: {
+        name: 'valid_name',
+        completed: true
+      }
+    }
+
+    jest.spyOn(booleanValidatorStub, 'isValid').mockReturnValueOnce(false)
+
+    const httpResponse = sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(400)
+    expect(httpResponse.body).toEqual(new InvalidParamError('completed'))
   })
 })
