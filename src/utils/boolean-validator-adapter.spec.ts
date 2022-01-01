@@ -31,4 +31,16 @@ describe('BooleanValidatorAdapter', () => {
 
     expect(result).toBe(true)
   })
+
+  test('Should call isValid with correct values', () => {
+    const sut = makeSut()
+
+    const isBooleanSpy = jest.spyOn(validator, 'isBoolean')
+
+    const completed = true.toString()
+
+    sut.isValid(completed)
+
+    expect(isBooleanSpy).toHaveBeenCalledWith(completed)
+  })
 })
