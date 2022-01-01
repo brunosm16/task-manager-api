@@ -75,4 +75,23 @@ describe('Task Controller', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('completed'))
   })
+
+  test('Should call BooleanValidator with correct value', () => {
+    const { sut, booleanValidatorStub } = makeSut()
+
+    const httpRequest = {
+      body: {
+        name: 'valid_name',
+        completed: true
+      }
+    }
+
+    const isValidSpy = jest.spyOn(booleanValidatorStub, 'isValid')
+
+    sut.handle(httpRequest)
+
+    const { completed: requestParamCompleted } = httpRequest.body
+
+    expect(isValidSpy).toHaveBeenCalledWith(requestParamCompleted)
+  })
 })
