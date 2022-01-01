@@ -1,3 +1,3 @@
 export interface BooleanValidator {
-  isValid: (completed: boolean) => boolean
+  isValid: (completed: string) => boolean
 }

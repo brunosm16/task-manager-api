@@ -26,7 +26,7 @@ export class TaskController implements Controller {
 
       const { completed } = httpRequest.body
 
-      const completedIsValid = this.booleanValidator.isValid(completed)
+      const completedIsValid = this.booleanValidator.isValid(completed.toString())
 
       if (!completedIsValid) {
         return badRequest(new InvalidParamError('completed'))

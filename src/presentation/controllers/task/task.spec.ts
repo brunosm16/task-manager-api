@@ -9,7 +9,7 @@ interface SutTypes {
 
 const makeBooleanValidatorStub = (): BooleanValidator => {
   class BooleanValidatorStub implements BooleanValidator {
-    isValid (completed: boolean): boolean {
+    isValid (completed: string): boolean {
       return true
     }
   }
@@ -91,7 +91,7 @@ describe('Task Controller', () => {
 
     const { completed: requestParamCompleted } = httpRequest.body
 
-    expect(isValidSpy).toHaveBeenCalledWith(requestParamCompleted)
+    expect(isValidSpy).toHaveBeenCalledWith(requestParamCompleted.toString())
   })
 
   test('Should return 500 if BooleanValidator throws', async () => {
