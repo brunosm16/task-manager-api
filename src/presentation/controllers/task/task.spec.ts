@@ -2,6 +2,7 @@ import { MissingParamError } from '../../errors/missing-param-error'
 import { InvalidParamError } from '../../errors/invalid-param-error'
 import { BooleanValidator } from '../../protocols/boolean-validator'
 import { TaskController } from './task'
+import { ServerError } from '../../errors/server-error'
 
 interface SutTypes {
   sut: TaskController
@@ -93,5 +94,25 @@ describe('Task Controller', () => {
     const { completed: requestParamCompleted } = httpRequest.body
 
     expect(isValidSpy).toHaveBeenCalledWith(requestParamCompleted)
+  })
+
+  test('Should return 500 if BooleanValidator throws', () => {
+    const { sut, booleanValidatorStub } = makeSut()
+
+    jest.spyOn(booleanValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new ServerError()
+    })
+
+    const httpRequest = {
+      body: {
+        name: 'valid_name',
+        completed: true
+      }
+    }
+
+    const httpResponse = sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
   })
 })
