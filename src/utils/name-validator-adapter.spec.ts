@@ -18,10 +18,22 @@ describe('Name Validator', () => {
   test('Should return true if validator returns true', () => {
     const sut = makeSut()
 
-    const name = 'abcde'
+    const name = 'valid_name'
 
     const result = sut.isValid(name.toString())
 
     expect(result).toBe(true)
+  })
+
+  test('Should call validator with correct value', () => {
+    const sut = makeSut()
+
+    const name = 'valid_name'
+
+    const isValidSpy = jest.spyOn(sut, 'isValid')
+
+    sut.isValid(name.toString())
+
+    expect(isValidSpy).toHaveBeenCalledWith(name.toString())
   })
 })
