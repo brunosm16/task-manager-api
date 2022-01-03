@@ -163,4 +163,24 @@ describe('Task Controller', () => {
 
     expect(isValidSpy).toHaveBeenCalledWith(requestParamName)
   })
+
+  test('Should throw if NameValidator throws', async () => {
+    const { sut, nameValidatorStub } = makeSut()
+
+    const httpRequest = {
+      body: {
+        name: 'valid_name',
+        completed: true
+      }
+    }
+
+    jest.spyOn(nameValidatorStub, 'isValid').mockImplementationOnce(() => {
+      throw new ServerError()
+    })
+
+    const httpResponse = await sut.handle(httpRequest)
+
+    expect(httpResponse.statusCode).toBe(500)
+    expect(httpResponse.body).toEqual(new ServerError())
+  })
 })
