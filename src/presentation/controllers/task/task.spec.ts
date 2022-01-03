@@ -107,7 +107,7 @@ describe('Task Controller', () => {
     expect(isValidSpy).toHaveBeenCalledWith(requestParamCompleted.toString())
   })
 
-  test('Should return 500 if BooleanValidator throws', async () => {
+  test('Should throws if BooleanValidator throws', async () => {
     const { sut, booleanValidatorStub } = makeSut()
 
     jest.spyOn(booleanValidatorStub, 'isValid').mockImplementationOnce(() => {
@@ -145,7 +145,7 @@ describe('Task Controller', () => {
     expect(httpResponse.body).toEqual(new InvalidParamError('name'))
   })
 
-  test('Should return 400 if NameValidator with correct values', async () => {
+  test('Should return 400 if NameValidator with correct value', async () => {
     const { sut, nameValidatorStub } = makeSut()
 
     const httpRequest = {
