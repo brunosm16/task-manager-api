@@ -144,4 +144,23 @@ describe('Task Controller', () => {
     expect(httpResponse.statusCode).toBe(400)
     expect(httpResponse.body).toEqual(new InvalidParamError('name'))
   })
+
+  test('Should return 400 if NameValidator with correct values', async () => {
+    const { sut, nameValidatorStub } = makeSut()
+
+    const httpRequest = {
+      body: {
+        name: 'valid_name',
+        completed: true
+      }
+    }
+
+    const isValidSpy = jest.spyOn(nameValidatorStub, 'isValid')
+
+    await sut.handle(httpRequest)
+
+    const { name: requestParamName } = httpRequest.body
+
+    expect(isValidSpy).toHaveBeenCalledWith(requestParamName)
+  })
 })
